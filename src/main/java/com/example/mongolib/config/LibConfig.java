@@ -1,4 +1,4 @@
-package com.example.mongolib;
+package com.example.mongolib.config;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -6,11 +6,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import java.util.Collection;
-import java.util.Collections;
 
 @Configuration
 public class LibConfig{
@@ -18,7 +14,8 @@ public class LibConfig{
     @Bean
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/nolibrary");
-        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+        MongoClientSettings mongoClientSettings =
+                MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
         return MongoClients.create(mongoClientSettings);

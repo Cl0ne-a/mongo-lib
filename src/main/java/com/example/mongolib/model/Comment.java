@@ -1,22 +1,22 @@
-package com.example.mongolib;
+package com.example.mongolib.model;
 
-import lombok.Builder;
-import lombok.Data;
+import com.example.mongolib.model.Book;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Builder
 @Document
-@Data
-public class Book {
+public class Comment {
     @NotNull
     @Id
     private String id;
-    @NotNull
     @NotBlank
-    private String title;
+    @NotNull
+    private String commentLine;
 
+    @NotBlank
+    @NotNull
+    private Book book;
 }
