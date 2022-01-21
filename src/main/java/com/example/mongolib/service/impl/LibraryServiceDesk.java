@@ -1,5 +1,6 @@
 package com.example.mongolib.service.impl;
 
+import com.example.mongolib.model.Author;
 import com.example.mongolib.model.Book;
 import com.example.mongolib.model.Comment;
 import com.example.mongolib.repository.AuthorRepository;
@@ -32,11 +33,19 @@ public class LibraryServiceDesk implements LibraryService {
     }
 
     @Override
-    public List<Book> findAll() {
-        Iterable<Book> it = bookRepository.findAll();
+    public List<Book> findAllBooks() {
+        Iterable<Book> iterable = bookRepository.findAll();
         List<Book> books = new ArrayList<>();
-        it.forEach(books::add);
+        iterable.forEach(books::add);
         return books;
+    }
+
+    @Override
+    public List<Author> findAllAuthors() {
+        Iterable<Author> iterable = authorRepository.findAll();
+        List<Author> authors = new ArrayList<>();
+        iterable.forEach(authors::add);
+        return authors;
     }
 
     @Override
@@ -44,4 +53,6 @@ public class LibraryServiceDesk implements LibraryService {
         Book book = bookRepository.findBookByTitle(bookTitle);
         return commentRepository.findAllByBook(book);
     }
+
+
 }

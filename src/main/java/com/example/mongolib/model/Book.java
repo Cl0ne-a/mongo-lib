@@ -28,8 +28,14 @@ public class Book {
         return title;
     }
 
+    @NotNull
+    @NotBlank
     public Author getAuthor() {
         return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     @Override

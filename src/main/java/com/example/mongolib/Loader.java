@@ -23,6 +23,7 @@ public class Loader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        authorRepository.deleteAll();
         bookRepository.deleteAll();
 
         Author aditya = Author.builder().id(UUID.randomUUID().toString()).name("Aditya Bhargava").build();
