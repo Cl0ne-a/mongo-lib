@@ -1,8 +1,7 @@
-package com.example.mongolib.repository;
+package com.nosql.mongolib.repository;
 
-import com.example.mongolib.model.Book;
+import com.nosql.mongolib.model.Book;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BookRepository extends MongoRepository<Book, String> {
-    Book findBookByTitle(String title);
 }

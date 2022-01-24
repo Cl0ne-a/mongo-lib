@@ -1,12 +1,10 @@
-package com.example.mongolib.model;
+package com.nosql.mongolib.model;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
-
 @Builder
 @Document
 public class Author {

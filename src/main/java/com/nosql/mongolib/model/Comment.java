@@ -1,6 +1,5 @@
-package com.example.mongolib.model;
+package com.nosql.mongolib.model;
 
-import com.example.mongolib.model.Book;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,4 +18,18 @@ public class Comment {
     @NotBlank
     @NotNull
     private Book book;
+
+    public Comment(Book book, String commentLine) {
+        this.book = book;
+        this.commentLine = commentLine;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", commentLine='" + commentLine + '\'' +
+                ", book=" + book +
+                '}';
+    }
 }
