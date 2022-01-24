@@ -15,6 +15,10 @@ public class Comment {
     @NotNull
     private String commentLine;
 
+    public String getCommentLine() {
+        return commentLine;
+    }
+
     @NotBlank
     @NotNull
     private Book book;

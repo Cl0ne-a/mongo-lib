@@ -3,35 +3,33 @@ package com.nosql.mongolib.service.impl;
 import com.nosql.mongolib.model.Author;
 import com.nosql.mongolib.model.Book;
 import com.nosql.mongolib.model.Genre;
+import com.nosql.mongolib.repository.BookRepository;
 import com.nosql.mongolib.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
 @Service
 public class BookServiceImpl implements BookService {
     private final MongoTemplate mongoTemplate;
+    private final BookRepository bookRepository;
 
     @Autowired
-    public BookServiceImpl(MongoTemplate mongoTemplate) {
+    public BookServiceImpl(MongoTemplate mongoTemplate, BookRepository bookRepository) {
         this.mongoTemplate = mongoTemplate;
+        this.bookRepository = bookRepository;
     }
 
     @Override
     public List<Book> getAllByGenre(Genre genre) {
 
-        return mongoTemplate.query(Book.class)
-                .matching(Query.query(where("genre").is(genre)))
-                .all();
+//        return mongoTemplate.query(Book.class)
+//                .matching(Query.query(where("genre").is(genre)))
+//                .all();
+
+        return bookRepository.findAllByGenre(genre);
     }
 
     @Override
@@ -46,7 +44,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBook(Book book) {
-        mongoTemplate.remove(book);
+        bookRepository.delete(book);
     }
 
     @Override
@@ -57,13 +55,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> byTitleAndAuthor(String titleMatcher, Author author) {
 
-        TypedAggregation<Book> agg =
-                newAggregation(
-                        Book.class,
-                        match(Criteria.where("title").regex(titleMatcher)
-                                .and("author").is(author)));
-        var aggregationResult = mongoTemplate.aggregate(agg, Book.class);
+//        todo: is that a nice way ?
+//        TypedAggregation<Book> agg = aggregationHelper.getAggregation(titleMatcher, author);
+//        var aggregationResult = mongoTemplate.aggregate(agg, Book.class);
+//        TypedAggregation<Book> aggregation = newAggregation(
+//                    Book.class,
+//                    match(Criteria.where("title").regex(titleMatcher)
+//                            .and("author").is(author)));
+//        return aggregationResult.getMappedResults();
 
-        return aggregationResult.getMappedResults();
+        return bookRepository.findAllByTitleLikeAndAuthor(titleMatcher, author);
     }
+
+
 }

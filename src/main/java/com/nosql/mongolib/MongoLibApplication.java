@@ -34,5 +34,7 @@ public class MongoLibApplication {
         val b = bookService.findById("1");
         System.out.println(b);
         bookService.findAllBooks().forEach(System.out::println);
+
+        authorService.findAllAuthors().forEach(System.out::println);
     }
 }

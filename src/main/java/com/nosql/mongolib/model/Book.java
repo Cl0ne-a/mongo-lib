@@ -21,36 +21,19 @@ public class Book {
     @NotBlank
     private Genre genre;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    public Book(String id, String title, Author author, Genre genre) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
         this.title = title;
+        this.author = author;
+        this.genre = genre;
     }
 
     public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-
     public Genre getGenre() {
         return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
     }
 
     @Override
