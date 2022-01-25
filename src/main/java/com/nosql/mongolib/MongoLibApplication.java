@@ -16,25 +16,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class MongoLibApplication {
 
     public static void main(String[] args) {
-        val cfg = SpringApplication.run(MongoLibApplication.class, args);
-
-        val bookService = cfg.getBean(BookService.class);
-        val authorService = cfg.getBean(AuthorService.class);
-        val genreRepo = cfg.getBean(GenreRepository.class);
-        Author author = Author.builder().name("John Thompson").build();
-        Genre genre = genreRepo.findByGenre("science");
-        Book book = Book.builder()
-                .author(authorService.findById("1"))
-                .genre(genre)
-                .title("Spring Framework 5: Beginner to Guru")
-                .build();
-        bookService.save(book);
-        val sth = bookService.byTitleAndAuthor("n", authorService.findById("1"));
-        bookService.getAllByGenre(genre).forEach(System.out::println);
-        val b = bookService.findById("1");
-        System.out.println(b);
-        bookService.findAllBooks().forEach(System.out::println);
-
-        authorService.findAllAuthors().forEach(System.out::println);
+        SpringApplication.run(MongoLibApplication.class, args);
     }
 }
