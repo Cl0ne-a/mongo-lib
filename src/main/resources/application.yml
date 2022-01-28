@@ -1,3 +1,17 @@
 spring:
-  main:
-    allow-circular-references: true
+#  main:
+#    allow-circular-references: true
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: nolibrary
+mongock:
+  runner-type: "InitializingBean"
+
+  change-logs-scan-package:
+    - com.nosql.mongolib.changelog
+logging:
+  level:
+    root: ERROR

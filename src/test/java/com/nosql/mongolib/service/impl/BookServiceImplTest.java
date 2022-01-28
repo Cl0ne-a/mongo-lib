@@ -36,7 +36,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
     BookServiceImplTest() {
         this.bookRepository = mock(BookRepository.class);
         this.mongoTemplate = mock(MongoTemplate.class);
-        this.bookService = new BookServiceImpl(mongoTemplate, bookRepository);
+        this.bookService = new BookServiceImpl(bookRepository);
     }
 
     @Test
@@ -44,7 +44,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
         Author author = Author.builder().build();
         Genre genre = Genre.builder().build();
 
-        Book book = new Book("1", "book", author, genre);
+        Book book = Book.builder().id("1").title("book").author(author).genre(genre).build();
         when(mongoTemplate.findById("1", Book.class)).thenReturn(book);
 
         assertThat(bookService.findById("1")).isEqualTo(book);
@@ -55,7 +55,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
         Author author = Author.builder().build();
         Genre genre = Genre.builder().build();
 
-        Book book = new Book("1", "book", author, genre);
+        Book book = Book.builder().id("1").title("book").author(author).genre(genre).build();
         List<Book> expected = List.of(book);
         when(mongoTemplate.findAll(Book.class)).thenReturn(expected);
         val actual = bookService.findAllBooks();
@@ -67,7 +67,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
     void save() {
         Author author = Author.builder().build();
         Genre genre = Genre.builder().build();
-        Book book = new Book("1", "book", author, genre);
+        Book book = Book.builder().id("1").title("book").author(author).genre(genre).build();
         when(mongoTemplate.save(book)).thenReturn(book);
 
         assertThat(bookService.save(book)).usingRecursiveComparison().isEqualTo(book);
@@ -77,7 +77,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
     void byTitleAndAuthor() {
         Author author = Author.builder().id("1").name("A").build();
         Genre genre = Genre.builder().build();
-        Book book = new Book("1", "Car", author, genre);
+        Book book = Book.builder().id("1").title("book").author(author).genre(genre).build();
         String titleMatcher = "a";
         List<Book> expected = List.of(book);
 
@@ -90,7 +90,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
     void deleteBook() {
         Author author = Author.builder().id("1").name("A").build();
         Genre genre = Genre.builder().id("1").genre("G").build();
-        Book book = new Book("1", "Car", author, genre);
+        Book book = Book.builder().id("1").title("book").author(author).genre(genre).build();
 
         bookService.deleteBook(book);
         Mockito.verify(bookRepository).delete(captor.capture());
@@ -103,7 +103,7 @@ class BookServiceImplTest extends MongoLibApplicationTest {
     void getAllByGenre() {
         Author author = Author.builder().id("1").name("A").build();
         Genre genre = Genre.builder().id("1").genre("G").build();
-        Book book = new Book("1", "Car", author, genre);
+        Book book = Book.builder().id("1").title("book").author(author).genre(genre).build();
         List<Book> expected = List.of(book);
         when(bookRepository.findAllByGenre(genre)).thenReturn(expected);
 

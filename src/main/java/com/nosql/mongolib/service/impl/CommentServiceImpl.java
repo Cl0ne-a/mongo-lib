@@ -27,4 +27,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> findCommentsByBook(Book book) {
         return commentRepository.findAllByBook(book);
     }
+
+    @Override
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
+    }
 }

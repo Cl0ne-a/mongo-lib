@@ -3,29 +3,22 @@ package com.nosql.mongolib.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Document
 public class Comment {
-    @NotNull
     @Id
     private String id;
-    @NotBlank
-    @NotNull
+
     private String commentLine;
 
-    public String getCommentLine() {
-        return commentLine;
-    }
-
-    @NotBlank
-    @NotNull
     private Book book;
 
     public Comment(Book book, String commentLine) {
         this.book = book;
         this.commentLine = commentLine;
+    }
+
+    public String getCommentLine() {
+        return commentLine;
     }
 
     @Override

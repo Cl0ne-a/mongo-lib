@@ -25,4 +25,24 @@ public class AuthorServiceImpl implements AuthorService {
     public Author findById(String id) {
         return authorRepository.findById(id).orElseThrow();
     }
+
+    @Override
+    public Author findByName(String name) {
+        return authorRepository.findByName(name);
+    }
+
+    @Override
+    public Author saveAuthor(Author author) {
+        return authorRepository.save(author);
+    }
+
+    @Override
+    public void deleteAll() {
+        authorRepository.deleteAll();
+    }
+
+    @Override
+    public void saveAll(List<Author> list) {
+        authorRepository.saveAll(list);
+    }
 }

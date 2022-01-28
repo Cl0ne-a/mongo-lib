@@ -4,11 +4,9 @@ import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
 @Builder
 @Document
 public class Genre {
-    @NotNull
     @Id
     private String id;
 

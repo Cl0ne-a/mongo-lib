@@ -13,4 +13,6 @@ public interface BookService {
     List<Book> findAllBooks();
     List<Book> byTitleAndAuthor(String titleMatcher, Author author);
     List<Book> getAllByGenre(Genre genre);
+    void deleteAll();
+    void saveAll(List<Book> list);
 }

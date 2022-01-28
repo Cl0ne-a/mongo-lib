@@ -8,4 +8,5 @@ import java.util.List;
 public interface CommentService {
     Comment addComment(Book book, String comment);
     List<Comment> findCommentsByBook(Book book);
+    Comment save(Comment comment);
 }

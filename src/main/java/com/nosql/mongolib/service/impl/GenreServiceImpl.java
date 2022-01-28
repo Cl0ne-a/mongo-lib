@@ -26,4 +26,14 @@ public class GenreServiceImpl implements GenreService {
     public List<Genre> listAllGenres() {
         return genreRepository.findAll();
     }
+
+    @Override
+    public void deleteAll() {
+        genreRepository.deleteAll();
+    }
+
+    @Override
+    public void saveAll(List<Genre> genres) {
+        genreRepository.saveAll(genres);
+    }
 }

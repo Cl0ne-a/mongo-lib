@@ -6,40 +6,43 @@ import com.nosql.mongolib.model.Genre;
 import com.nosql.mongolib.repository.BookRepository;
 import com.nosql.mongolib.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class BookServiceImpl implements BookService {
-    private final MongoTemplate mongoTemplate;
     private final BookRepository bookRepository;
 
     @Autowired
-    public BookServiceImpl(MongoTemplate mongoTemplate, BookRepository bookRepository) {
-        this.mongoTemplate = mongoTemplate;
+    public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
     @Override
     public List<Book> getAllByGenre(Genre genre) {
-
-//        return mongoTemplate.query(Book.class)
-//                .matching(Query.query(where("genre").is(genre)))
-//                .all();
-
         return bookRepository.findAllByGenre(genre);
     }
 
     @Override
+    public void deleteAll() {
+        bookRepository.deleteAll();
+    }
+
+    @Override
+    public void saveAll(List<Book> list) {
+        bookRepository.saveAll(list);
+    }
+
+    @Override
     public List<Book> findAllBooks() {
-        return mongoTemplate.findAll(Book.class);
+        return bookRepository.findAll();
     }
 
     @Override
     public Book findById(String id) {
-        return mongoTemplate.findById(id, Book.class);
+        return bookRepository.findById(id).orElseThrow(()
+                -> new RuntimeException("no book by that id"));
     }
 
     @Override
@@ -49,23 +52,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book save(Book newBook) {
-        return mongoTemplate.save(newBook);
+        return bookRepository.save(newBook);
     }
 
     @Override
     public List<Book> byTitleAndAuthor(String titleMatcher, Author author) {
-
-//        todo: is that a nice way ?
-//        TypedAggregation<Book> agg = aggregationHelper.getAggregation(titleMatcher, author);
-//        var aggregationResult = mongoTemplate.aggregate(agg, Book.class);
-//        TypedAggregation<Book> aggregation = newAggregation(
-//                    Book.class,
-//                    match(Criteria.where("title").regex(titleMatcher)
-//                            .and("author").is(author)));
-//        return aggregationResult.getMappedResults();
-
         return bookRepository.findAllByTitleLikeAndAuthor(titleMatcher, author);
     }
-
-
 }
