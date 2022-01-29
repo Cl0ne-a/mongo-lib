@@ -12,6 +12,11 @@ mongock:
 
   change-logs-scan-package:
     - com.nosql.mongolib.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
 logging:
   level:
     root: ERROR

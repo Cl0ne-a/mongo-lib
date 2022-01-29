@@ -18,12 +18,17 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Genre findById(String id) {
-        return genreRepository.findById(id).orElseThrow();
+    public Genre save(Genre genre) {
+        return genreRepository.save(genre);
     }
 
     @Override
-    public List<Genre> listAllGenres() {
+    public Genre findByGenre(String genre) {
+        return genreRepository.findByGenre(genre).orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public List<Genre> findAllGenres() {
         return genreRepository.findAll();
     }
 

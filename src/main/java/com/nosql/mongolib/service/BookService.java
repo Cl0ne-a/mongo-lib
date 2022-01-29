@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookService {
     Book findById(String id);
     void deleteBook(Book book);
-    Book save(Book newBook);
+    Book saveNewBook(Book newBook);
     List<Book> findAllBooks();
     List<Book> byTitleAndAuthor(String titleMatcher, Author author);
     List<Book> getAllByGenre(Genre genre);

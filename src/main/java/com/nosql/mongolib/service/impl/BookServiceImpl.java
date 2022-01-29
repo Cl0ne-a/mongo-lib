@@ -5,6 +5,7 @@ import com.nosql.mongolib.model.Book;
 import com.nosql.mongolib.model.Genre;
 import com.nosql.mongolib.repository.BookRepository;
 import com.nosql.mongolib.service.BookService;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book save(Book newBook) {
-        return bookRepository.save(newBook);
+    public Book saveNewBook(Book newBook) {
+        val newBookTitle = newBook.getTitle();
+        val newBookAuthor = newBook.getAuthor();
+        val newBookGenre = newBook.getGenre();
+        val bookToSave = bookRepository.findByGenreAndAuthor(newBookGenre, newBookAuthor);
+        return bookToSave.isPresent() && newBookTitle.equals(bookToSave.get().getTitle())
+                ? null
+                : bookRepository.save(newBook);
     }
 
     @Override

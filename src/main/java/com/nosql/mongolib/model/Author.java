@@ -1,29 +1,20 @@
 package com.nosql.mongolib.model;
 
+import com.github.cloudyrock.mongock.utils.field.Field;
 import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
+@Data
 @Builder
 @Document
 public class Author {
     @Id
     private String id;
 
+    @Field(value = "name")
     private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {

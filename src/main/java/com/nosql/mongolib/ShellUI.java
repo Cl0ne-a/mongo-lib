@@ -8,10 +8,10 @@ import com.nosql.mongolib.service.AuthorService;
 import com.nosql.mongolib.service.BookService;
 import com.nosql.mongolib.service.CommentService;
 import com.nosql.mongolib.service.GenreService;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.shell.standard.ShellComponent;
-//import org.springframework.shell.standard.ShellMethod;
 
+import java.util.Collections;
 import java.util.List;
 
 //@ShellComponent
@@ -42,17 +42,17 @@ public class ShellUI {
 
 //    @ShellMethod(key = "genres", value = "list genres")
     List<Genre> listAllGenres() {
-        return genreService.listAllGenres();
+        return genreService.findAllGenres();
     }
 
 //    @ShellMethod(key = "comments-by-book-id", value = "load comments by book id")
     List<Comment> listComments(String id) {
         Book book = bookService.findById(id);
-        return commentService.findCommentsByBook(book);
+        return commentService.findCommentsByBook(id);
     }
 
 //    @ShellMethod(key = "give-feedback", value = "allows adding comment to the book")
-    Comment addComment(String bookId, String commentLine) {
+    List<Comment> addComment(String bookId, String commentLine) {
         Book book = bookService.findById(bookId);
         return commentService.addComment(book, commentLine);
     }
@@ -77,7 +77,7 @@ public class ShellUI {
                 .author(author)
                 .genre(genre)
                 .build();
-        return bookService.save(newBook);
+        return bookService.saveNewBook(newBook);
     }
 
 //    @ShellMethod(key = "book-by-name", value = "of all existing books retrieve those of certain author and match naming criteria ")
@@ -88,7 +88,9 @@ public class ShellUI {
     
 //    @ShellMethod(key = "book-by-genre", value = "finds books by certain genre")
     List<Book> getAllByGenre(String genreId) {
-        Genre genre = genreService.findById(genreId);
-        return bookService.getAllByGenre(genre);
+        val genre = genreService.findByGenre(genreId);
+        return genre!=null
+                ? bookService.getAllByGenre(genre)
+                : Collections.emptyList();
     }
 }
