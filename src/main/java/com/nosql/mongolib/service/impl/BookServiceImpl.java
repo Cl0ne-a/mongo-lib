@@ -3,7 +3,9 @@ package com.nosql.mongolib.service.impl;
 import com.nosql.mongolib.model.Author;
 import com.nosql.mongolib.model.Book;
 import com.nosql.mongolib.model.Genre;
+import com.nosql.mongolib.repository.AuthorRepository;
 import com.nosql.mongolib.repository.BookRepository;
+import com.nosql.mongolib.repository.GenreRepository;
 import com.nosql.mongolib.service.BookService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,14 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
         this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
     }
 
     @Override
@@ -54,12 +60,19 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book saveNewBook(Book newBook) {
         val newBookTitle = newBook.getTitle();
-        val newBookAuthor = newBook.getAuthor();
-        val newBookGenre = newBook.getGenre();
-        val bookToSave = bookRepository.findByGenreAndAuthor(newBookGenre, newBookAuthor);
-        return bookToSave.isPresent() && newBookTitle.equals(bookToSave.get().getTitle())
-                ? null
-                : bookRepository.save(newBook);
+        val newBookAuthor = newBook.getAuthor().getName();
+        val newBookGenre = newBook.getGenre().getGenre();
+        val bookToSave = bookRepository
+                .findByTitleAndGenreAndAuthor(
+                        newBookTitle,
+                        genreRepository.findByGenre(newBookGenre).orElseThrow(()
+                                -> new RuntimeException("no suck genre available")),
+                        authorRepository.findByName(newBookAuthor));
+        if (bookToSave.isEmpty()) {
+            return bookRepository.save(newBook);
+        } else {
+            throw new RuntimeException("Book is already present");
+        }
     }
 
     @Override
