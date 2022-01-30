@@ -24,7 +24,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre findByGenre(String genre) {
-        return genreRepository.findByGenre(genre).orElseThrow(RuntimeException::new);
+        return genreRepository.findByGenre(genre);
     }
 
     @Override

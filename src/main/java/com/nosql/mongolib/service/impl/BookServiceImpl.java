@@ -37,8 +37,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveAll(List<Book> list) {
-        bookRepository.saveAll(list);
+    public List<Book> saveAll(List<Book> list) {
+        return bookRepository.saveAll(list);
     }
 
     @Override
@@ -53,8 +53,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Book book) {
-        bookRepository.delete(book);
+    public void deleteBook(String bookId) {
+        if(bookRepository.findById(bookId).isPresent()) {
+            bookRepository.deleteById(bookId);
+        } else {
+            throw new RuntimeException("no such book in the library");
+        }
     }
 
     @Override
@@ -65,10 +69,9 @@ public class BookServiceImpl implements BookService {
         val bookToSave = bookRepository
                 .findByTitleAndGenreAndAuthor(
                         newBookTitle,
-                        genreRepository.findByGenre(newBookGenre).orElseThrow(()
-                                -> new RuntimeException("no suck genre available")),
+                        genreRepository.findByGenre(newBookGenre),
                         authorRepository.findByName(newBookAuthor));
-        if (bookToSave.isEmpty()) {
+        if (bookToSave == null) {
             return bookRepository.save(newBook);
         } else {
             throw new RuntimeException("Book is already present");

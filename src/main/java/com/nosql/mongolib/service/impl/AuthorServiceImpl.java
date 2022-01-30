@@ -1,8 +1,11 @@
 package com.nosql.mongolib.service.impl;
 
 import com.nosql.mongolib.model.Author;
+import com.nosql.mongolib.model.Book;
 import com.nosql.mongolib.repository.AuthorRepository;
+import com.nosql.mongolib.repository.BookRepository;
 import com.nosql.mongolib.service.AuthorService;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +14,11 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, BookRepository bookRepository) {
         this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
     }
 
     @Override
@@ -44,5 +49,19 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void saveAll(List<Author> list) {
         authorRepository.saveAll(list);
+    }
+
+    @Override
+    public Author updateAuthor(String oldName, String newName) {
+        val author = authorRepository.findByName(oldName);
+        List<Book> allAuthorBooks = bookRepository.findByAuthor(author);
+
+        author.setName(newName);
+        allAuthorBooks.stream().forEach(book -> {
+            book.setAuthor(author);
+            bookRepository.save(book);
+        });
+
+        return authorRepository.save(author);
     }
 }

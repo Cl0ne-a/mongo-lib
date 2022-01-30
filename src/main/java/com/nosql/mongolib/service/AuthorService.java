@@ -11,4 +11,5 @@ public interface AuthorService {
     void saveAuthor(Author author);
     void deleteAll();
     void saveAll(List<Author> list);
+    Author updateAuthor(String oldName, String newName);
 }

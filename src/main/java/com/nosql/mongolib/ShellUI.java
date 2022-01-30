@@ -42,6 +42,11 @@ public class ShellUI {
         return authorService.findAllAuthors();
     }
 
+    @ShellMethod(key = "update-author", value = "allows to update author")
+    Author updateAuthor(String oldAuthorName, String newAuthorName) {
+        return authorService.updateAuthor(oldAuthorName, newAuthorName);
+    }
+
     @ShellMethod(key = "genres", value = "list genres")
     List<Genre> listAllGenres() {
         return genreService.findAllGenres();
@@ -66,11 +71,9 @@ public class ShellUI {
 
     @ShellMethod(key = "del-book", value = "delete book from list")
     void deleteBook(String bookId) {
-        Book book = bookService.findById(bookId);
-        bookService.deleteBook(book);
+        bookService.deleteBook(bookId);
     }
 
-    // todo check
     @ShellMethod(key = "add", value = "Save book to DB")
     Book save(String bookName, String authorName, String genreName) {
         Author author = Author.builder().name(authorName).build();
