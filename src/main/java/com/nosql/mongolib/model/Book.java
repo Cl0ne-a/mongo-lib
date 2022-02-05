@@ -1,32 +1,30 @@
-package com.example.mongolib.model;
+package com.nosql.mongolib.model;
 
+import com.github.cloudyrock.mongock.utils.field.Field;
 import lombok.Builder;
-import org.springframework.data.annotation.Id;
+import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
+import java.util.List;
+@Data
 @Builder
 @Document
 public class Book {
-    @NotNull
     @MongoId
     private String id;
-    @NotNull
+
+    @Field(value = "title")
     private String title;
-    @NotNull
-    @NotBlank
+
+    @Field(value = "author")
     private Author author;
 
-    public String getId() {
-        return id;
-    }
+    @Field(value = "genre")
+    private Genre genre;
 
-    public String getTitle() {
-        return title;
-    }
+    @Field("comments")
+    private List<Comment> comments;
 
     public Author getAuthor() {
         return author;
@@ -38,6 +36,8 @@ public class Book {
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", author=" + author +
+                ", genre=" + genre +
+                ", comments=" + comments +
                 '}';
     }
 }

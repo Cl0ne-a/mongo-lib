@@ -1,33 +1,20 @@
-package com.example.mongolib.model;
+package com.nosql.mongolib.model;
 
+import com.github.cloudyrock.mongock.utils.field.Field;
 import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+@Data
 @Builder
 @Document
 public class Author {
-    @NotNull
     @Id
     private String id;
+
+    @Field(value = "name")
     private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {
