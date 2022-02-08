@@ -1,7 +1,4 @@
 spring:
-  main:
-    allow-circular-references: true
-
   data:
     mongodb:
       host: localhost
@@ -19,4 +16,4 @@ mongock:
 
 logging:
   level:
-    root: ERROR
+    root: info

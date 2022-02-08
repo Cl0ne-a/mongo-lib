@@ -5,10 +5,10 @@ import com.github.cloudyrock.mongock.ChangeSet;
 import com.nosql.mongolib.model.Author;
 import com.nosql.mongolib.model.Book;
 import com.nosql.mongolib.model.Genre;
-import com.nosql.mongolib.service.AuthorService;
-import com.nosql.mongolib.service.BookService;
+import com.nosql.mongolib.repository.AuthorRepository;
+import com.nosql.mongolib.repository.GenreRepository;
+import com.nosql.mongolib.repository.BookRepository;
 import com.nosql.mongolib.service.CommentService;
-import com.nosql.mongolib.service.GenreService;
 
 import java.util.List;
 
@@ -16,24 +16,24 @@ import java.util.List;
 public class InitMongoDBDataChangeLog {
 
     @ChangeSet(order = "001",id = "dropDB", author = "me", runAlways = true)
-    public void dropDB(GenreService genreService,
-                       AuthorService authorService,
-                       BookService bookService) {
-        genreService.deleteAll();
-        authorService.deleteAll();
-        bookService.deleteAll();
+    public void dropDB(GenreRepository genreRepository,
+                       AuthorRepository authorRepository,
+                       BookRepository bookRepository) {
+        genreRepository.deleteAll();
+        authorRepository.deleteAll();
+        bookRepository.deleteAll();
     }
 
     @ChangeSet(order = "002", id = "initAuthor", author = "me", runAlways = true)
-    public void initAuthor(AuthorService authorService) {
+    public void initAuthor(AuthorRepository authorRepository) {
         Author aditya = Author.builder().id("1").name("Aditya Bhargava").build();
         Author randall = Author.builder().id("2").name("Randall Munroe").build();
 
-        authorService.saveAll(List.of(aditya, randall));
+        authorRepository.saveAll(List.of(aditya, randall));
     }
 
     @ChangeSet(order = "003", id = "initGenre", author = "me", runAlways = true)
-    public void initGenre(GenreService genreService) {
+    public void initGenre(GenreRepository genreRepository) {
         Genre science = Genre.builder()
                 .id("1")
                 .genre("science")
@@ -42,29 +42,31 @@ public class InitMongoDBDataChangeLog {
                 .id("2")
                 .genre("comedy")
                 .build();
-        genreService.saveAll(List.of(comedy, science));
+        genreRepository.saveAll(List.of(comedy, science));
     }
 
     @ChangeSet(order = "004", id = "initBook", author = "me", runAlways = true)
-    public void initBook(BookService bookService,
-                         AuthorService authorService,
-                         GenreService genreService,
+    public void initBook(BookRepository bookRepository,
+                         AuthorRepository authorRepository,
+                         GenreRepository genreRepository,
                          CommentService commentService) {
         Book it = Book.builder()
                 .id("1")
                 .title("Grokking Algorithms")
-                .author(authorService.findById("1"))
-                .genre(genreService.findByGenre("science"))
+                .author(authorRepository.findById("1").orElseThrow())
+                .genre(genreRepository.findByGenre("science"))
                 .build();
 
         Book comic = Book.builder()
                 .id("2")
                 .title("What If?")
-                .author(authorService.findById("2"))
-                .genre(genreService.findByGenre("comedy"))
+                .author(authorRepository.findById("2").orElseThrow())
+                .genre(genreRepository.findByGenre("comedy"))
                 .build();
 
-        bookService.saveAll(List.of(it, comic));
-        commentService.addComment(bookService.findById("2"), "this book was hilarious");
+        bookRepository.saveAll(List.of(it, comic));
+        commentService.addComment(
+                bookRepository.findById("2").orElseThrow(() -> new RuntimeException("no book found by id 2")),
+                "this book was hilarious");
     }
 }
