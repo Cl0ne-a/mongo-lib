@@ -1,5 +1,6 @@
 package com.nosql.mongolib.service.impl;
 
+import com.nosql.mongolib.domain.BookDto;
 import com.nosql.mongolib.model.Author;
 import com.nosql.mongolib.model.Book;
 import com.nosql.mongolib.model.Genre;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,9 +29,9 @@ import static org.mockito.Mockito.when;
 
 class BookServiceImplTest {
 
-    private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
-    private GenreRepository genreRepository;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
     private final BookService bookService;
 
     @Autowired
@@ -62,17 +64,19 @@ class BookServiceImplTest {
     @Test
     void findById() {
         String id = "id";
-        Optional<Book> expected = Optional.ofNullable(Book.builder()
+        Optional<Book> book = Optional.ofNullable(Book.builder()
                 .id("1")
                 .title("title")
                 .author(Author.builder().id("1").build())
                 .genre(Genre.builder().id("1").build())
                 .build());
-        when(bookRepository.findById(id)).thenReturn(expected);
+        when(bookRepository.findById(id)).thenReturn(book);
+        BookDto expected = BookDto.bookToDto(book.get());
 
         val actual = bookService.findById(id);
-        assertEquals(actual, expected.get());
+        assertEquals(expected, actual);
     }
+
 //    void deleteBook(Book book);
     @Test
     void deleteBook() {
@@ -96,41 +100,43 @@ class BookServiceImplTest {
     @Test
     void saveNewBook() {
         String id = anyString();
-        String genreName = "anygenre";
-        String authorName = "anyauthor";
-        String title = "anytitle";
-        Genre genre =   Genre.builder().id("1").build();//any(Genre.class);
-        Author author = Author.builder().id("1").build();//any(Author.class);
+        String title = "title";
+
         Book expected = Book.builder()
                 .id(id)
                 .title(title)
-                .author(Author.builder().id("1").build())
-                .genre(Genre.builder().id("1").build())
+                .author(Author.builder().id("1").name("authorName").build())
+                .genre(Genre.builder().id("1").genre("genreName").build())
                 .build();
 
+        when(genreRepository.findByGenre("genreName")).thenReturn(Genre.builder().id("1").genre("genreName").build());
+        when(authorRepository.findByName("authorName")).thenReturn(Author.builder().id("1").name("authorName").build());
+        when(bookRepository.findByTitleAndGenreAndAuthor(
+                title,
+                Genre.builder().id("1").genre("genreName").build(),
+                Author.builder().id("1").name("authorName").build()))
+                .thenReturn(null);
 
-        when(genreRepository.findByGenre(genreName)).thenReturn(genre);
-        when(authorRepository.findByName(authorName)).thenReturn(author);
-        when(bookRepository.findByTitleAndGenreAndAuthor(title, genre, author))
-                .thenReturn(expected);
         when(bookRepository.save(expected)).thenReturn(expected);
 
-//        val actual = bookService.saveNewBook(expected);
-//        Assertions.assertEquals(expected, actual);
+        val actual = bookService.saveNewBook(BookDto.bookToDto(expected));
+        Assertions.assertEquals(BookDto.bookToDto(expected), actual);
     }
 
 //    List<Book> findAllBooks();
     @Test
     void findAllBooks() {
-        List<Book> mockListExpected = List.of(
-                Book.builder()
-                        .id("1")
-                        .title("title")
-                        .author(Author.builder().id("1").build())
-                        .genre(Genre.builder().id("1").build())
-                        .build()
-        );
-        when(bookRepository.findAll()).thenReturn(mockListExpected);
+        val bookDto = BookDto.bookToDto(Book.builder()
+                .title("title")
+                .author(Author.builder().id("1").name("author").build())
+                .genre(Genre.builder().id("1").genre("genre").build())
+                .build());
+        List<BookDto> mockListExpected = List.of(bookDto);
+        when(bookRepository.findAll())
+                .thenReturn(mockListExpected.stream()
+                        .map(BookDto::toDomainObject)
+                        .collect(Collectors.toList()));
+
         val actual = bookService.findAllBooks();
         Assertions.assertEquals(mockListExpected, actual);
     }
@@ -157,6 +163,7 @@ class BookServiceImplTest {
 
         assertEquals(List.of(expected), actual);
     }
+
 //    List<Book> getAllByGenre(Genre genre);
     @Test
     void getAllByGenre() {
@@ -176,6 +183,7 @@ class BookServiceImplTest {
         val actual = bookService.getAllByGenre(genre);
         assertEquals(expected, actual);
     }
+
 //    void deleteAll();
     @Test
     void deleteAll() {

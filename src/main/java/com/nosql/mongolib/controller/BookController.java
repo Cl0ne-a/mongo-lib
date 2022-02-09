@@ -1,4 +1,4 @@
-package com.nosql.mongolib;
+package com.nosql.mongolib.controller;
 
 import com.nosql.mongolib.domain.BookDto;
 import com.nosql.mongolib.service.BookService;
@@ -30,7 +30,7 @@ public class BookController {
     }
 
     @PostMapping("/edit")
-    public String saveBook(BookDto bookDto) {
+    public String saveEditedPage(BookDto bookDto) {
         bookService.saveNewBook(bookDto);
         return "redirect:/";
     }
@@ -43,7 +43,7 @@ public class BookController {
     }
 
     @PostMapping("/create")
-    public String saveNewBook(BookDto bookDto) {
+    public String saveCreatedPage(BookDto bookDto) {
         bookService.saveNewBook(bookDto);
         return "redirect:/";
     }
