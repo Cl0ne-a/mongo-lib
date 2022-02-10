@@ -7,6 +7,7 @@ import com.nosql.mongolib.model.Genre;
 import java.util.List;
 
 public interface BookService {
+    Book update(String id,  String newTitle);
     Book findById(String id);
     void deleteBook(String bookId);
     Book saveNewBook(Book newBook);

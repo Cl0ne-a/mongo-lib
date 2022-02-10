@@ -12,11 +12,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -56,6 +58,30 @@ class BookServiceImplTest {
 
         verify(bookRepository).saveAll(mockListExpected);
         assertEquals(mockListExpected, actual);
+    }
+
+    @Test
+    void update() {
+        Book expected = Book.builder()
+                .id("1")
+                .title("title")
+                .author(Author.builder().id("1").build())
+                .genre(Genre.builder().id("1").build())
+                .build();
+        Book expected2 = Book.builder()
+                .id("1")
+                .title("new")
+                .author(Author.builder().id("1").build())
+                .genre(Genre.builder().id("1").build())
+                .build();
+        when(bookRepository.findById(anyString()))
+                .thenReturn(Optional.ofNullable(expected));
+        when(bookRepository.save(any(Book.class))).thenReturn(expected2);
+        when(bookRepository.findById(anyString()))
+                .thenReturn(Optional.ofNullable(expected2));
+
+        var updated = bookService.update("1", "new");
+        assertEquals("new", updated.getTitle());
     }
 
 //    Book findById(String id);

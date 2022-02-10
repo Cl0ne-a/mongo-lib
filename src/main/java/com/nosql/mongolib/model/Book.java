@@ -3,6 +3,7 @@ package com.nosql.mongolib.model;
 import com.github.cloudyrock.mongock.utils.field.Field;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Builder
 @Document
 public class Book {
-    @MongoId
+    @Id
     private String id;
 
     @Field(value = "title")

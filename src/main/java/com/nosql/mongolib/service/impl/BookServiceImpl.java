@@ -47,6 +47,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book update(String id, String newTitle) {
+        bookRepository.findById(id)
+                .ifPresent(book -> {
+                    book.setTitle(newTitle);
+                    bookRepository.save(book);
+                });
+        return bookRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    @Override
     public Book findById(String id) {
         return bookRepository.findById(id).orElseThrow(()
                 -> new RuntimeException("no book by that id"));
