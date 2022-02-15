@@ -7,12 +7,16 @@
         <tr>
           <th>Id</th>
           <th>Title</th>
+          <th>Genre</th>
+          <th>Author</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="book in books" v-bind:key="book.id">
           <td>{{ book.id }}</td>
           <td>{{ book.title }}</td>
+          <td>{{ book.genre.genre }}</td>
+          <td>{{ book.author.name }}</td>
         </tr>
         </tbody>
       </table>
