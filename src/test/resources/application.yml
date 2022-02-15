@@ -1,15 +1,8 @@
 spring:
-  main:
-    allow-circular-references: true
-
   data:
     mongodb:
       port: 0
       database: test
-
-  shell:
-    interactive:
-      enabled: false
 
   mongodb:
     embedded:
