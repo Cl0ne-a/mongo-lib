@@ -9,26 +9,26 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-
+@RequestMapping("/api")
 @RestController
 public class LibraryController {
 
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/library/books/")
+    @GetMapping("/books")
     private ResponseEntity<List<Book>> findAll() {
         List<Book>books = bookService.findAllBooks();
         return ResponseEntity.ok().body(books);
     }
 
-    @GetMapping("/library/books/{id}")
+    @GetMapping("/books/{id}")
     private ResponseEntity<Book> findById(@PathVariable("id") String id) {
         Book book = bookService.findById(id);
         return ResponseEntity.ok().body(book);
     }
 
-    @PostMapping("/library/books/")
+    @PostMapping("/book")
     private ResponseEntity<Book> create(@RequestBody Book book) {
         Book created = bookService.saveNewBook(book);
 
@@ -39,7 +39,7 @@ public class LibraryController {
         return ResponseEntity.created(loc).body(created);
     }
 
-    @PutMapping("library/books/{id}/{title}")
+    @PutMapping("/books/{id}/{title}")
     private ResponseEntity<Book> update(
             @PathVariable("id") String id,
             @PathVariable("title") String newTitle) {
@@ -47,7 +47,7 @@ public class LibraryController {
         return ResponseEntity.ok().body(updated);
     }
 
-    @DeleteMapping("/library/books/{id}")
+    @DeleteMapping("/books/{id}")
     private ResponseEntity<Book> delete(@PathVariable("id") String id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
