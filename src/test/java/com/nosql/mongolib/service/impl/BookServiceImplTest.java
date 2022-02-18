@@ -2,6 +2,7 @@ package com.nosql.mongolib.service.impl;
 
 import com.nosql.mongolib.model.Author;
 import com.nosql.mongolib.model.Book;
+import com.nosql.mongolib.model.Comment;
 import com.nosql.mongolib.model.Genre;
 import com.nosql.mongolib.repository.AuthorRepository;
 import com.nosql.mongolib.repository.BookRepository;
@@ -11,6 +12,7 @@ import com.nosql.mongolib.service.BookService;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -99,28 +102,33 @@ class BookServiceImplTest {
     //    Book saveNewBook(Book newBook);
     @Test
     void saveNewBook() {
-        String id = anyString();
+        String id = "1";
         String title = "title";
 
-        Book expected = Book.builder()
+        BookDto expected = BookDto.builder()
                 .id(id)
                 .title(title)
-                .author(Author.builder().id("1").name("authorName").build())
-                .genre(Genre.builder().id("1").genre("genreName").build())
+                .author("author")
+                .genre("genre")
+                .comments(List.of("comment"))
+                .build();
+        Book book = Book.builder()
+                .id(id)
+                .title(title)
+                .author(Author.builder().id("q").name("author").build())
+                .genre(Genre.builder().id("g").genre("genre").build())
+                .comments(List.of(Comment.builder().id("1").commentLine("comment").build()))
                 .build();
 
-        when(genreRepository.findByGenre("genreName")).thenReturn(Genre.builder().id("1").genre("genreName").build());
-        when(authorRepository.findByName("authorName")).thenReturn(Author.builder().id("1").name("authorName").build());
         when(bookRepository.findByTitleAndGenreAndAuthor(
-                title,
-                Genre.builder().id("1").genre("genreName").build(),
-                Author.builder().id("1").name("authorName").build()))
+                anyString(),
+                any(Genre.class),
+                any(Author.class)))
                 .thenReturn(null);
+        when(bookRepository.save(BookDto.toDomainObject(expected))).thenReturn(book);
 
-        when(bookRepository.save(expected)).thenReturn(expected);
-
-        val actual = bookService.saveNewBook(BookDto.bookToDto(expected));
-        Assertions.assertEquals(BookDto.bookToDto(expected), actual);
+        val actual = bookService.saveNewBook(expected);
+        Assertions.assertEquals(expected, actual);
     }
 
     //    List<Book> findAllBooks();

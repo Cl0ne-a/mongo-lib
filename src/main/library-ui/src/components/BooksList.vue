@@ -25,7 +25,7 @@
           <td><button class="btn btn-success" v-on:click="updateBookClicked(book.id)">Update</button></td>
           <td><button class="btn btn-warning" v-on:click="deleteBookClicked(book.id)">Delete</button></td>
         </tr>
-        <div class="row">
+        <div class="ui-button">
           <button class="btn btn-success" v-on:click="addBookClicked()">Add</button>
         </div>
         </tbody>
