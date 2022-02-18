@@ -6,12 +6,14 @@ import com.nosql.mongolib.model.Genre;
 import com.nosql.mongolib.repository.AuthorRepository;
 import com.nosql.mongolib.repository.BookRepository;
 import com.nosql.mongolib.repository.GenreRepository;
+import com.nosql.mongolib.rest.domain.BookDto;
 import com.nosql.mongolib.service.BookService;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -27,39 +29,56 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllByGenre(Genre genre) {
-        return bookRepository.findAllByGenre(genre);
+    public List<BookDto> findAllBooks() {
+        return bookRepository.findAll()
+                .stream()
+                .map(BookDto::bookToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteAll() {
-        bookRepository.deleteAll();
+    public BookDto updateBook(String id, String newTitle) {
+        val bookInDb = bookRepository.findById(id);
+        bookInDb.ifPresent(book -> {
+            book.setTitle(newTitle);
+            bookRepository.save(book);
+        });
+        if(bookInDb.isPresent()) {
+            return BookDto.builder()
+                    .id(id)
+                    .title(newTitle)
+                    .author(bookInDb.get().getAuthor().getName())
+                    .genre(bookInDb.get().getGenre().getGenre())
+                    .build();
+        }
+        else {
+            return BookDto.builder().id("").title("n/a").author("n/a").genre("n/a").build();
+        }
     }
 
     @Override
-    public List<Book> saveAll(List<Book> list) {
-        return bookRepository.saveAll(list);
-    }
-
-    @Override
-    public List<Book> findAllBooks() {
-        return bookRepository.findAll();
-    }
-
-    @Override
-    public Book update(String id, String newTitle) {
-        bookRepository.findById(id)
-                .ifPresent(book -> {
-                    book.setTitle(newTitle);
-                    bookRepository.save(book);
-                });
-        return bookRepository.findById(id).orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    public Book findById(String id) {
-        return bookRepository.findById(id).orElseThrow(()
+    public BookDto findById(String id) {
+        val book = bookRepository.findById(id).orElseThrow(()
                 -> new RuntimeException("no book by that id"));
+        return BookDto.bookToDto(book);
+    }
+
+    @Override
+    public BookDto saveNewBook(BookDto newBook) {
+        val newBookTitle = newBook.getTitle();
+        val newBookAuthor = newBook.getAuthor();
+        val newBookGenre = newBook.getGenre();
+        val bookToSave = bookRepository
+                .findByTitleAndGenreAndAuthor(
+                        newBookTitle,
+                        genreRepository.findByGenre(newBookGenre),
+                        authorRepository.findByName(newBookAuthor));
+        if (bookToSave == null) {
+            val book = bookRepository.save(BookDto.toDomainObject(newBook));
+            return BookDto.bookToDto(book);
+        } else {
+            throw new RuntimeException("Book is already present");
+        }
     }
 
     @Override
@@ -72,20 +91,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book saveNewBook(Book newBook) {
-        val newBookTitle = newBook.getTitle();
-        val newBookAuthor = newBook.getAuthor().getName();
-        val newBookGenre = newBook.getGenre().getGenre();
-        val bookToSave = bookRepository
-                .findByTitleAndGenreAndAuthor(
-                        newBookTitle,
-                        genreRepository.findByGenre(newBookGenre),
-                        authorRepository.findByName(newBookAuthor));
-        if (bookToSave == null) {
-            return bookRepository.save(newBook);
-        } else {
-            throw new RuntimeException("Book is already present");
-        }
+    public List<Book> getAllByGenre(Genre genre) {
+        return bookRepository.findAllByGenre(genre);
+    }
+
+    @Override
+    public void deleteAll() {
+        bookRepository.deleteAll();
+    }
+
+    @Override
+    public List<Book> saveAll(List<Book> list) {
+        return bookRepository.saveAll(list);
     }
 
     @Override

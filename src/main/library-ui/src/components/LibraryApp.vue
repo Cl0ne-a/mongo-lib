@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Library Helpdesk</h1>
+    <h1>L i b r a r y</h1>
     <BooksList></BooksList>
   </div>
 </template>
@@ -8,11 +8,12 @@
 <script>
 import BooksList from "@/components/BooksList";
 export default {
-  name: "LibraryApp",
-  components: {BooksList}
-}
+  name: "library",
+  components: {
+    BooksList
+  }
+};
 </script>
 
 <style scoped>
-
 </style>

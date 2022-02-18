@@ -1,4 +1,4 @@
-package com.nosql.mongolib.domain;
+package com.nosql.mongolib.rest.domain;
 
 import com.nosql.mongolib.model.Author;
 import com.nosql.mongolib.model.Book;

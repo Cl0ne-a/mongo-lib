@@ -2,11 +2,14 @@ package com.nosql.mongolib.service.impl;
 
 import com.nosql.mongolib.model.Genre;
 import com.nosql.mongolib.repository.GenreRepository;
+import com.nosql.mongolib.rest.domain.BookDto;
+import com.nosql.mongolib.rest.domain.GenreDto;
 import com.nosql.mongolib.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GenreServiceImpl implements GenreService {
@@ -28,8 +31,10 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public List<Genre> findAllGenres() {
-        return genreRepository.findAll();
+    public List<GenreDto> findAllGenres() {
+        return genreRepository.findAll().stream()
+                    .map(GenreDto::genreToDto)
+                    .collect(Collectors.toList());
     }
 
     @Override

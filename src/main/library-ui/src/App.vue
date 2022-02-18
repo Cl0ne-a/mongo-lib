@@ -1,15 +1,16 @@
 <template>
   <div class="container">
-    <LibraryApp />
+    <router-view/>
   </div>
 </template>
 
 <script>
+
 import LibraryApp from "@/components/LibraryApp";
 
 export default {
   name: 'library',
-  components: {
+  Components: {
     LibraryApp
   }
 }
