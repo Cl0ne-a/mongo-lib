@@ -20,7 +20,7 @@ public class BookDto {
 
     public static BookDto bookToDto(Book book) {
         List<String> thisCommentsList = new ArrayList<>();
-        if(book.getComments()!=null) {
+        if (book.getComments() != null) {
             book.getComments()
                     .stream()
                     .forEach(comment -> thisCommentsList.add(comment.getCommentLine()));
@@ -41,5 +41,14 @@ public class BookDto {
                 .author(author)
                 .genre(genre)
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "{\"id\":\"" + id + "\"," +
+                "\"title\":\"" + title + "\"," +
+                "\"author\":\"" + author + "\"," +
+                "\"genre\":\"" + genre + "\"," +
+                "\"comments\":" + comments + "}";
     }
 }

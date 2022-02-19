@@ -12,7 +12,6 @@ import com.nosql.mongolib.service.BookService;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.StringUtils;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,25 +22,19 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 class BookServiceImplTest {
 
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
     private final BookService bookService;
 
     @Autowired
     BookServiceImplTest() {
         bookRepository = mock(BookRepository.class);
-        authorRepository = mock(AuthorRepository.class);
-        genreRepository = mock(GenreRepository.class);
+        AuthorRepository authorRepository = mock(AuthorRepository.class);
+        GenreRepository genreRepository = mock(GenreRepository.class);
         this.bookService = new BookServiceImpl(bookRepository, authorRepository, genreRepository);
     }
 
@@ -91,7 +84,6 @@ class BookServiceImplTest {
                 .genre(Genre.builder().id("1").build())
                 .build());
 
-//        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
         when(bookRepository.findById(id)).thenReturn(expected);
         doNothing().when(bookRepository).deleteById(id);
         bookService.deleteBook(id);
@@ -99,7 +91,6 @@ class BookServiceImplTest {
         verify(bookRepository, times(1)).deleteById(id);
     }
 
-    //    Book saveNewBook(Book newBook);
     @Test
     void saveNewBook() {
         String id = "1";
@@ -131,7 +122,6 @@ class BookServiceImplTest {
         Assertions.assertEquals(expected, actual);
     }
 
-    //    List<Book> findAllBooks();
     @Test
     void findAllBooks() {
         val bookDto = BookDto.bookToDto(Book.builder()
@@ -149,7 +139,6 @@ class BookServiceImplTest {
         Assertions.assertEquals(mockListExpected, actual);
     }
 
-    //    List<Book> byTitleAndAuthor(String titleMatcher, Author author);
     @Test
     void byTitleAndAuthor() {
         String id = "id";
@@ -172,7 +161,6 @@ class BookServiceImplTest {
         assertEquals(List.of(expected), actual);
     }
 
-    //    List<Book> getAllByGenre(Genre genre);
     @Test
     void getAllByGenre() {
         String id = "id";
@@ -192,7 +180,6 @@ class BookServiceImplTest {
         assertEquals(expected, actual);
     }
 
-    //    void deleteAll();
     @Test
     void deleteAll() {
         doNothing().when(bookRepository).deleteAll();
