@@ -20,16 +20,18 @@
         </fieldset>
         <fieldset class="form-group">
           <label>Author</label>
-          <input type="text" class="form-control" v-model="author" />
+          <div id="v-model-author" class="author">
+            <select v-model="authorent">
+              <option disabled value="">Choose an option</option>
+              <option>Aditya Bhargava</option>
+              <option>Randall Munroe</option>
+            </select>
+            <span>Chosen: {{ this.authorent }}</span>
+          </div>
         </fieldset>
         <fieldset class="form-group">
           <label>Genre</label>
-<!--          <v-select-->
-<!--              :options="genre"-->
-<!--              label="genre"-->
-<!--          ></v-select>-->
-<!--          <input type="text" class="form-control" v-model="genre" />-->
-          <div id="v-model-select" class="demo">
+          <div id="v-model-genre" class="genre">
             <select v-model="selected">
               <option disabled value="">Choose an option</option>
               <option>science</option>
@@ -51,6 +53,7 @@ export default {
   name: "bookDetails",
   data() {
     return {
+      authorent: '',
       selected: '',
       title: "n/a",
       author: "n/a",
@@ -85,7 +88,7 @@ export default {
         if (this.id === undefined) {
           BooksService.createBook( {
             title: this.title,
-            author: this.author,
+            author: this.authorent,
             genre: this.selected
           }).then(() => {
             this.$router.push("/books");
