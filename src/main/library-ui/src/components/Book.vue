@@ -24,11 +24,20 @@
         </fieldset>
         <fieldset class="form-group">
           <label>Genre</label>
-          <v-select
-              :options="genre"
-              label="genre"
-          ></v-select>
-          <input type="text" class="form-control" v-model="genre" />
+<!--          <v-select-->
+<!--              :options="genre"-->
+<!--              label="genre"-->
+<!--          ></v-select>-->
+<!--          <input type="text" class="form-control" v-model="genre" />-->
+          <div id="v-model-select" class="demo">
+            <select v-model="selected">
+              <option disabled value="">Choose an option</option>
+              <option>science</option>
+              <option>comedy</option>
+            </select>
+            <span>Chosen: {{ this.selected }}</span>
+          </div>
+
         </fieldset>
         <button class="btn btn-success" type="submit">Save</button>
       </form>
@@ -42,6 +51,7 @@ export default {
   name: "bookDetails",
   data() {
     return {
+      selected: '',
       title: "n/a",
       author: "n/a",
       genre: "n/a",
@@ -76,7 +86,7 @@ export default {
           BooksService.createBook( {
             title: this.title,
             author: this.author,
-            genre: this.genre
+            genre: this.selected
           }).then(() => {
             this.$router.push("/books");
           });
